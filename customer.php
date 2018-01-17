@@ -2,11 +2,12 @@
 require_once('DBCustomer.php');
 $dbCustomer = new DBCustomer();
 //更新処理
-if(isset($_POST['submitUpdate'])){
+if (isset($_POST['submitUpdate'])) {
     $dbCustomer->UpdateCustomer();
 }
+
 //更新用フォーム要素の表示
-if(isset($_POST['update'])){
+if (isset($_POST['update'])) {
     //更新対象の値を取得
     $dbCustomerId   = $_POST['id'];
     $dbCustomerName = $dbCustomer->CustomerNameForUpdate($_POST['id']);
@@ -15,18 +16,21 @@ if(isset($_POST['update'])){
     //クラスを記述することで表示/非表示を設定
     $entryCss = "class='hideArea'";
     $updateCss = "";
-}else{
+} else {
     $entryCss = "";
     $updateCss = "class='hideArea'";
 }
+
 //削除処理
-if(isset($_POST['delete'])){
+if (isset($_POST['delete'])) {
     $dbCustomer->DeleteCustomer($_POST['id']);
 }
+
 //新規登録処理
-if(isset($_POST['submitEntry'])){
+if (isset($_POST['submitEntry'])) {
     $dbCustomer->InsertCustomer();
 }
+
 //全レコードの表示
 $data = $dbCustomer->SelectCustomerAll();
 ?>
@@ -61,7 +65,7 @@ $data = $dbCustomer->SelectCustomerAll();
         <label><span class="entrylabel">顧客名</span><input type='text' name='CustomerName'
                                                          size="30" required></label>
         <label><span class="entrylabel">TEL</span><input type='tel' name='TEL' size="15"></label>
-        <label><span class="entrylabel">Email</span><input type='mail' name='Email' size="40"></label>
+        <label><span class="entrylabel">Email</span><input type='email' name='Email' size="40"></label>
         <input type='submit' name='submitEntry' value=' 　新規登録　 '>
     </form>
 </div>
@@ -74,7 +78,7 @@ $data = $dbCustomer->SelectCustomerAll();
                                                          size="30" value="<?php echo $dbCustomerName;?>" required></label>
         <label><span class="entrylabel">TEL</span><input type='tel' name='TEL'
                                                          size="15" value="<?php echo $tel;?>"></label>
-        <label><span class="entrylabel">Email</span><input type='mail' name='Email'
+        <label><span class="entrylabel">Email</span><input type='email' name='Email'
                                                            size="40" value="<?php echo $email;?>"></label>
         <input type='submit' name='submitUpdate' value=' 　更新　 '>
     </form>

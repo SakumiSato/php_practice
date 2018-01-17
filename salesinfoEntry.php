@@ -7,7 +7,7 @@ $CustomerID = "";
 $dbSalesInfo = new DbSalesInfo();
 //商品名リストの作成
 $GoodsList = $dbSalesInfo->ListGoods();
-if(isset($_POST['submit'])){
+if (isset($_POST['submit'])) {
     //新規登録処理
     $SalesDate = $_POST['SalesDate'];
     $CustomerID = $_POST['CustomerID'];
@@ -16,7 +16,7 @@ if(isset($_POST['submit'])){
     $slip = $dbSalesInfo->SelectSalesinfo($SalesDate, $CustomerID);
     //顧客名リストの作成（選択者を表示）
     $CustomerList = $dbSalesInfo->ListCustomerWithSelected($CustomerID);
-}else{
+} else {
     //顧客名リストの作成
     $CustomerList = $dbSalesInfo->ListCustomer();
 }
@@ -24,30 +24,28 @@ if(isset($_POST['submit'])){
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8" />
-<title>売上管理システム</title>
-<link rel="stylesheet" type="text/css" href="style.css" />
+    <meta charset="utf-8" />
+    <title>売上管理システム</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
 </head>
 <body>
 <div id="menu">
 <ul>
-<li><a href="salesinfo.php">売上情報</a></li>
-<li><a href="salesinfoEntry.php">伝票の新規作成</a></li>
-<li><a href="bill.php">請求書</a></li>
-<li><a href="customer.php">顧客マスタ</a></li>
-<li><a href="goods.php">商品マスタ</a></li>
+    <li><a href="salesinfo.php">売上情報</a></li>
+    <li><a href="salesinfoEntry.php">伝票の新規作成</a></li>
+    <li><a href="bill.php">請求書</a></li>
+    <li><a href="customer.php">顧客マスタ</a></li>
+    <li><a href="goods.php">商品マスタ</a></li>
 </ul>
 </div>
 <h1>売上伝票の新規作成</h1>
 <div id="entry">
 <form method="post" action="">
-<label>日付<input type="date" id="SalesDate" name="SalesDate"
- value="<?php echo $SalesDate;?>" required></label>
-<label>顧客名<?php echo $CustomerList;?></label>
-<label>商品名<?php echo $GoodsList;?></label>
-<label>数量<input type="number" min="0" id="Quantity"
- name="Quantity" required></label>
-<input type="submit" value="　　登録　　" name="submit" />
+    <label>日付<input type="date" id="SalesDate" name="SalesDate" value="<?php echo $SalesDate;?>" required></label>
+    <label>顧客名<?php echo $CustomerList;?></label>
+    <label>商品名<?php echo $GoodsList;?></label>
+    <label>数量<input type="number" min="0" id="Quantity" name="Quantity" required></label>
+    <input type="submit" value="　　登録　　" name="submit" />
 </form>
 </div>
 <div class="ClearFloat"></div>
