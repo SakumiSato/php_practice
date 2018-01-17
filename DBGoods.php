@@ -2,17 +2,20 @@
 require_once ('db.php');
 // extends DB = DBというクラスを継承している
 // DB...親クラス DBGoods...子クラス
-class DBGoods extends DB{
+class DBGoods extends DB
+{
     // goodsテーブルのCRUD担当
-    public function SelectGoodsAll(){
+    public function SelectGoodsAll()
+    {
         $sql = "select * from goods";
         $res = parent::executeSQL($sql, null);
         $data = "<table class='recordlist' id='goodsTable'>";
         $data .= "<tr><th>ID</th><th>商品名</th><th>単価</th><th></th><th></th></tr>\n";
         // 繰り返し処理
-        foreach ($rows = $res->fetchAll(PDO::FETCH_NUM)as $row){
+        foreach ($rows = $res->fetchAll(PDO::FETCH_NUM) as $row)
+        {
             $data .= "<tr>";
-            for ($i=0; $i<count($row); $i++){
+            for ($i=0; $i<count($row); $i++) {
                 $data .= "<td>{$row[$i]}</td>";
             }
             //更新ボタンのコード
@@ -34,25 +37,34 @@ eof;
         $data .= "</table>\n";
         return $data;
     }
-    public function InsertGoods(){
+    public function InsertGoods()
+    {
         $sql = "insert into goods VALUES(?,?,?)";
         $array = array($_POST['GoodsID'], $_POST['GoodsName'], $_POST['Price']);
         // 親クラスの関数を使用する時は parent::関数名(); と表記する
         parent::executeSQL($sql, $array);
     }
-    public function UpdateGoods(){
+
+    public function UpdateGoods()
+    {
         $sql = "update goods set GoodsName=?, Price=? WHERE GoodsID=?";
         $array = array($_POST['GoodsName'], $_POST['Price'], $_POST['GoodsID']);
         parent::executeSQL($sql, $array);
     }
-    public function GoodsNameForUpdate($GoodsID){
+
+    public function GoodsNameForUpdate($GoodsID)
+    {
         return $this->FieldValueForUpdate($GoodsID, "GoodsName");
     }
-    public function PriceForUpdate($GoodsID){
+
+    public function PriceForUpdate($GoodsID)
+    {
         return $this->FieldValueForUpdate($GoodsID, "Price");
     }
+
     //この中だけで使用するのでprivate
-    private function FieldValueForUpdate($GoodsID, $field){
+    private function FieldValueForUpdate($GoodsID, $field)
+    {
         //private関数　上の２つの関数で使用している
         $sql = "select {$field} from goods where GoodsID=?";
         $array = array($GoodsID);
@@ -60,10 +72,11 @@ eof;
         $rows = $res->fetch(PDO::FETCH_NUM);
         return $rows[0];
     }
-    public function DeleteGoods($GoodsID){
+
+    public function DeleteGoods($GoodsID)
+    {
         $sql = "delete from goods where GoodsID=?";
         $array = array($GoodsID);
         parent::executeSQL($sql, $array);
     }
 }
-?>

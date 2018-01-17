@@ -8,7 +8,7 @@ $detail = "";
 $total = "";
 
 $dbBill = new DBBill();
-if(isset($_POST['submit'])){
+if (isset($_POST['submit'])) {
     $startDate = $_POST['startDate'];
     $endDate = $_POST['endDate'];
     $TagCustomer = $dbBill->SelectTagOfCustomers($startDate, $endDate);
