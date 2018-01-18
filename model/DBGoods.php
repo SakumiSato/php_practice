@@ -1,5 +1,5 @@
 <?php
-require_once ('db.php');
+require_once('db.php');
 // extends DB = DBというクラスを継承している
 // DB...親クラス DBGoods...子クラス
 class DBGoods extends DB

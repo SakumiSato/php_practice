@@ -1,5 +1,5 @@
 <?php
-require_once ('db.php');
+require_once('db.php');
 class DBBill extends DB
 {
     //Bill.phpを担当するクラス

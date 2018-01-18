@@ -1,5 +1,5 @@
 <?php
-require_once ('db.php');
+require_once('db.php');
 class DBCustomer extends DB
 {
     //CustomerテーブルのCRUD担当
@@ -80,4 +80,3 @@ eof;
         return $data;
     }
 }
-
