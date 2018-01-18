@@ -1,8 +1,10 @@
 <?php
-require_once ('db.php');
-class DBBill extends DB{
+require_once('db.php');
+class DBBill extends DB
+{
     //Bill.phpを担当するクラス
-    private function SelectCustomers($startDate, $endDate){
+    private function SelectCustomers($startDate, $endDate)
+    {
         //指定期間に存在する顧客一覧の結果セットを取得
         $sql = <<<eof
         select distinct salesinfo.CustomerID, customer.CustomerName
@@ -15,9 +17,10 @@ eof;
         return $res;
     }
 
-    public  function SelectTagOfCustomers($startDate, $endDate){
+    public  function SelectTagOfCustomers($startDate, $endDate)
+    {
         $rows = $this->SelectCustomers($startDate, $endDate)->fetchAll(PDO::FETCH_NUM);
-        if(count($rows)==0) return "";
+        if (count($rows) == 0) return "";
         $tag = "<select name='CustomerID' id='CustomerID'>\n";
         $tag .= "<option value ='-99'>--    選択してください  --</option>\n";
         foreach ($rows as $row){
@@ -27,14 +30,16 @@ eof;
         return $tag;
     }
 
-    public function GetCustomerName($CustomerID){
+    public function GetCustomerName($CustomerID)
+    {
         $sql = "select CustomerName from customer WHERE  CustomerID=?";
         $array = array($CustomerID);
         $res = parent::executeSQL($sql, $array);
         $row = $res->fetch(PDO::FETCH_NUM);
         return $row[0];
     }
-    public function TotalAmount($startDate, $endDate, $CustomerID){
+    public function TotalAmount($startDate, $endDate, $CustomerID)
+    {
         //請求書の合計額
         $sql = <<<eof
         select sum(salesinfo.Quantity*goods.Price)
@@ -47,7 +52,8 @@ eof;
         return $row[0];
     }
 
-    private function getSalesinfo($startDate, $endDate, $CustomerID){
+    private function getSalesinfo($startDate, $endDate, $CustomerID)
+    {
         $sql = <<<eof
         select salesinfo.id, salesinfo.SalesDate, salesinfo.GoodsID, goods.GoodsName, 
                           goods.Price, salesinfo.Quantity, (goods.Price*salesinfo.Quantity)
@@ -60,15 +66,16 @@ eof;
         $res = parent::executeSQL($sql, $array);
         return $res;
     }
-    public function SelectSalesinfo($startDate, $endDate, $CustomerID){
+    public function SelectSalesinfo($startDate, $endDate, $CustomerID)
+    {
         //$fieldCount = 7;
         $tag = "<table>\n";
         $tag .= "<tr><th>ID</th><th>日付</th><th>顧客名</th><th>商品名</th><th>単価</th><th>数量</th><th>金額</th><th></th><th></th></tr>\n";
         $res = $this->getSalesinfo($startDate, $endDate, $CustomerID);
-        foreach ($rows = $res->fetchAll(PDO::FETCH_NUM)as $row){
+        foreach ($rows = $res -> fetchAll(PDO::FETCH_NUM) as $row) {
             $tag .= "<tr>";
             //次の行のcount関数の引数は$rows[0]にすること
-            for ($i=0; $i<count($rows[0]); $i++){
+            for ($i=0; $i<count($rows[0]); $i++) {
                 $tag .= "<td>{$row[$i]}</td>";
             }
             $tag .= "</tr>\n";
@@ -77,4 +84,3 @@ eof;
         return $tag;
     }
 }
-?>
