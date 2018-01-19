@@ -16,10 +16,18 @@ class DB
         }
     }
 
+    /**
+     * MySQLの情報を更新する
+     * 成功したらstatement, 失敗したらfalseを返す
+     *
+     * @param string $sql
+     * @param array $array
+     * @return bool|PDOStatement
+     */
     protected function executeSQL($sql, $array)
     {
         try {
-            if (!$pdo = $this -> ConnectDB()) return false;
+            if (!$pdo = $this->ConnectDB()) return false;
             $stmt = $pdo->prepare($sql);
             $stmt->execute($array);
             return $stmt;

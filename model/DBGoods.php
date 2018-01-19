@@ -5,6 +5,12 @@ require_once('db.php');
 class DBGoods extends DB
 {
     // goodsテーブルのCRUD担当
+
+    /**
+     * 全ての商品を取得する
+     *
+     * @return string
+     */
     public function SelectGoodsAll()
     {
         $sql = "select * from goods";
@@ -37,6 +43,12 @@ eof;
         $data .= "</table>\n";
         return $data;
     }
+
+    /**
+     * 商品の新規登録
+     *
+     * @return void
+     */
     public function InsertGoods()
     {
         $sql = "insert into goods VALUES(?,?,?)";
@@ -45,6 +57,11 @@ eof;
         parent::executeSQL($sql, $array);
     }
 
+    /**
+     * 商品情報を更新するためのsqlを作成する
+     *
+     * @return void
+     */
     public function UpdateGoods()
     {
         $sql = "update goods set GoodsName=?, Price=? WHERE GoodsID=?";
@@ -52,17 +69,36 @@ eof;
         parent::executeSQL($sql, $array);
     }
 
+    /**
+     * 選択したIDの商品名を変更する
+     *
+     * @param string $GoodsID
+     * @return mixed
+     */
     public function GoodsNameForUpdate($GoodsID)
     {
         return $this->FieldValueForUpdate($GoodsID, "GoodsName");
     }
 
+    /**
+     * 選択したIDの商品の値段を変更する
+     *
+     * @param string $GoodsID
+     * @return mixed
+     */
     public function PriceForUpdate($GoodsID)
     {
         return $this->FieldValueForUpdate($GoodsID, "Price");
     }
 
-    //この中だけで使用するのでprivate
+    /**
+     * 選択された商品の情報を更新する
+     * DBGoods内だけで使用するのでprivate
+     *
+     * @param string $GoodsID
+     * @param string $field
+     * @return mixed
+     */
     private function FieldValueForUpdate($GoodsID, $field)
     {
         //private関数　上の２つの関数で使用している
@@ -73,6 +109,12 @@ eof;
         return $rows[0];
     }
 
+    /**
+     * 選択したIDの商品を削除する
+     *
+     * @param string $GoodsID
+     * @return void
+     */
     public function DeleteGoods($GoodsID)
     {
         $sql = "delete from goods where GoodsID=?";
