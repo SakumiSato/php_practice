@@ -2,8 +2,13 @@
 require_once('db.php');
 class DBSalesInfo extends DB{
     //salesinfoテーブルのCRUD担当
+
+    /**
+     * 商品名リストの作成
+     *
+     * @return string
+     */
     public function ListGoods(){
-        //商品名リストの作成
         $sql = "SELECT GoodsID,GoodsName,Price FROM goods ORDER BY GoodsID";
         $res = parent::executeSQL($sql,null);
         $list = "<select name='GoodsID'>\n";
@@ -15,8 +20,11 @@ class DBSalesInfo extends DB{
         return $list;
     }
 
+    /**
+     * 顧客IDと商品IDが選択されていたら登録する
+     *
+     */
     public function InsertSalesinfo(){
-        //顧客IDと商品IDが選択されていたら登録
         if($_POST['CustomerID']>0 && $_POST['GoodsID']>0){
             $sql ="INSERT INTO salesinfo VALUES(?,?,?,?,?)";
             $array = array(null, $_POST['SalesDate'], $_POST['CustomerID'],
@@ -25,8 +33,15 @@ class DBSalesInfo extends DB{
         }
     }
 
+    /**
+     * 指定期間、顧客IDに該当する売上情報を取得する
+     * 取得できなかった場合はfalseを返す
+     *
+     * @param string $salesDate
+     * @param string $customerID
+     * @return bool|PDOStatement
+     */
     private function getSalesinfo($salesDate, $customerID){
-        //結果セットを取得
         $sql = <<<eof
     SELECT salesinfo.id,salesinfo.SalesDate,customer.CustomerName,goods.GoodsName,goods.Price,
     salesinfo.Quantity,goods.Price*salesinfo.Quantity
@@ -40,8 +55,14 @@ eof;
         return $res;
     }
 
+    /**
+     * 日付と顧客IDで売上情報を抽出する
+     *
+     * @param string $salesDate
+     * @param string $customerID
+     * @return string
+     */
     public function SelectSalesinfo($salesDate, $customerID){
-        //日付と顧客IDで売上情報を抽出（更新・削除ボタン付き）
         $res = $this->getSalesinfo($salesDate, $customerID);
         $data = "<table id='entryslip'>\n";
         $data .= "<tr><th>ID</th><th>日付</th><th>顧客名</th><th>商品名</th>
@@ -57,8 +78,13 @@ eof;
         return $data;
     }
 
+    /**
+     * 引数に取った顧客IDの顧客名リストを作成する
+     *
+     * @param string $CustomerID
+     * @return string
+     */
     public function ListCustomerWithSelected($CustomerID){
-        //顧客名リストの作成（引数の値を表示）
         $sql = "SELECT CustomerID,CustomerName FROM customer ORDER BY CustomerID";
         $res = parent::executeSQL($sql,null);
         $list = "<select name='CustomerID'>\n";
@@ -71,8 +97,12 @@ eof;
         return $list;
     }
 
+    /**
+     * 顧客名リストを作成する
+     *
+     * @return string
+     */
     public function ListCustomer(){
-        //顧客名リストの作成
         $sql = "SELECT CustomerID,CustomerName FROM customer ORDER BY CustomerID";
         $res = parent::executeSQL($sql,null);
         $list = "<select name='CustomerID'>\n";
@@ -84,12 +114,20 @@ eof;
         return $list;
     }
 
+    /**
+     * 選択したIDの売上情報を削除する
+     *
+     */
     public function DeleteDetail(){
         $sql = "DELETE FROM salesinfo WHERE ID=?";
         $array = array($_POST['id']);
         parent::executeSQL($sql,$array);
     }
 
+    /**
+     * 売上情報を更新するためのsqlを作成する
+     *
+     */
     public function UpdateDetail(){
         $sql = "UPDATE salesinfo SET SalesDate=?, CustomerID=?, GoodsID=?, Quantity=? WHERE id=?";
         $array = array($_POST['SalesDate'],$_POST['CustomerID'],$_POST['GoodsID'],
@@ -98,6 +136,14 @@ eof;
         parent::executeSQL($sql,$array);
     }
 
+    /**
+     * 引数に取った値を更新、取得する
+     * 取得できなかった場合はfalseを返す
+     *
+     * @param string $id
+     * @param string $field
+     * @return bool|PDOStatement
+     */
     private function FieldValueForUpdate($id, $field){
         //引数の値を取得
         $sql = "SELECT {$field} FROM salesinfo WHERE id=?";
@@ -107,24 +153,57 @@ eof;
         return $rows[0];
     }
 
+    /**
+     * 指定した売上情報の日付を更新、取得する
+     * 取得できなかった場合はfalseを返す
+     *
+     * @param string $id
+     * @return bool|PDOStatement
+     */
     public function getSalesDate($id){
         return $this->FieldValueForUpdate($id, "SalesDate");
     }
 
+    /**
+     * 指定したIDの顧客情報を更新、取得する
+     * 取得できなかった場合はfalseを返す
+     *
+     * @param string $id
+     * @return bool|PDOStatement
+     */
     public function getCustomerID($id){
         return $this->FieldValueForUpdate($id, "CustomerID");
     }
 
+    /**
+     * 商品IDを更新、取得する
+     * 取得できなかった場合はfalseを返す
+     *
+     * @param string $id
+     * @return bool|PDOStatement
+     */
     public function getGoodsID($id){
         return $this->FieldValueForUpdate($id, "GoodsID");
     }
 
+    /**
+     * 指定した売上情報の数量を更新、取得する
+     * 取得できなかった場合はfalseを返す
+     *
+     * @param string $id
+     * @return bool|PDOStatement
+     */
     public function getQuantity($id){
         return $this->FieldValueForUpdate($id, "Quantity");
     }
 
+    /**
+     * 商品名リストを作成する
+     *
+     * @param string $GoodsID
+     * @return string
+     */
     public function ListGoodsWithSelected($GoodsID){
-        //商品名リストの作成（引数の値を表示）
         $sql = "SELECT GoodsID,GoodsName FROM goods ORDER BY GoodsID";
         $res = parent::executeSQL($sql,null);
         $list = "<select name='GoodsID'>\n";
@@ -137,8 +216,14 @@ eof;
         return $list;
     }
 
+    /**
+     * 日付と顧客IDで売上情報を抽出する
+     *
+     * @param string $salesDate
+     * @param string $customerID
+     * @return string
+     */
     public function SelectSalesinfoWithButton($salesDate, $customerID){
-        //日付と顧客IDで売上情報を抽出（更新・削除ボタン付き）
         $res = $this->getSalesinfo($salesDate, $customerID);
         $data = "<table>\n";
         $data .= "<tr><th>ID</th><th>日付</th><th>顧客名</th><th>商品名</th>
@@ -163,8 +248,15 @@ eof;
         return $data;
     }
 
+    /**
+     * 指定期間に該当する伝票を取得、合計金額を算出してstatementを返す
+     * 取得できなかった場合はfalseを返す
+     *
+     * @param string $SalesDate
+     * @param string $CustomerID
+     * @return bool|PDOStatement
+     */
     public function TotalAmount($SalesDate, $CustomerID){
-        //伝票の合計額
         $sql = <<<eof
     SELECT sum(salesinfo.Quantity*goods.Price)
     FROM salesinfo INNER JOIN goods ON salesinfo.GoodsID = goods.GoodsID
@@ -176,12 +268,23 @@ eof;
         return $row[0];
     }
 
+    /**
+     * 伝票を削除する
+     *
+     * @return void
+     */
     public function DeleteSlip(){
         $sql = "DELETE FROM salesinfo WHERE SalesDate=? AND CustomerID=?";
         $array = array($_POST['SalesDate'],$_POST['CustomerID']);
         parent::executeSQL($sql,$array);
     }
 
+    /**
+     * 指定期間に該当する伝票を選択する
+     *
+     * @param string $salesDate
+     * @return string
+     */
     public function SelectSlips($salesDate){
         //日付で抽出
         $sql = <<<eof
@@ -213,4 +316,3 @@ eof;
         return $data;
     }
 }
-?>
